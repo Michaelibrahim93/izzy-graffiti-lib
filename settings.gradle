@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "IzzyGraffiti"
 include ':sample'
 include ':parser'
+include ':gson-adapter'

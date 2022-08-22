@@ -17,6 +17,8 @@ class ResourceToSerializableDocumentMapper(private val relationshipFieldMapper: 
         val fields = resource.nonNullFields()
             .groupBy { it.first.isAnnotationPresent(Relationship::class.java) }
 
+        //TODO::
+
         return SerializableDocument(
             resource.id,
             resource::class.java.getAnnotation(Type::class.java).type,
