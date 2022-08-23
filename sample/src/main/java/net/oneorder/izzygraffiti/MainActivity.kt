@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.undabot.izzy.parser.GsonParser
 import com.undabot.izzy.parser.Izzy
 import com.undabot.izzy.parser.IzzyConfiguration
+import com.undabot.izzy.parser.SidePosting
 import net.oneorder.izzygraffiti.models.LineItemUnit
 import net.oneorder.izzygraffiti.models.ShipmentStatus
 import net.oneorder.izzygraffiti.models.UnitEvents
@@ -42,10 +43,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun createShipment(): UpdateShipmentForm {
         val lineItemUnits = listOf(
-            LineItemUnit(id = "1", weight = 1.0, status_event = UnitEvents.EVENT_UNPICK),
-            LineItemUnit(id = "2", weight = 1.0, status_event = null),
-            LineItemUnit(id = "3", weight = 1.0, status_event = null),
-            LineItemUnit(id = "4", weight = 1.0, status_event = null),
+            LineItemUnit(id = null, weight = 1.0, status_event = UnitEvents.EVENT_UNPICK, method = SidePosting.METHOD_CREATE),
+            LineItemUnit(id = "2", weight = 1.0, status_event = null, method = SidePosting.METHOD_UPDATE),
+            LineItemUnit(id = "3", weight = 1.0, status_event = null, method = SidePosting.METHOD_UPDATE),
+            LineItemUnit(id = "4", weight = 1.0, status_event = null, method = SidePosting.METHOD_DISASSOCIATE),
         )
 
         return UpdateShipmentForm(
@@ -55,7 +56,8 @@ class MainActivity : AppCompatActivity() {
             status_event_done_at = "02-02-2020T02:02:02",
             pallet_size = 1.5,
             pallet_numbers = "1,2",
-            multipleUnits = lineItemUnits
+            multipleUnits = lineItemUnits,
+            favUnit = LineItemUnit(id = null, weight = 1.0, status_event = UnitEvents.EVENT_UNPICK, method = SidePosting.METHOD_CREATE)
         )
     }
 }

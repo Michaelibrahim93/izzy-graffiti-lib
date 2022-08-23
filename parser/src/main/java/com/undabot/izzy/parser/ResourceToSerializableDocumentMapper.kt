@@ -7,6 +7,7 @@ import com.undabot.izzy.models.IzzyResource
 import com.undabot.izzy.nonNullFields
 import com.undabot.izzy.parser.DataWrapper.Companion.NULLABLE_FIELD
 import java.lang.reflect.Field
+import kotlin.collections.ArrayList
 
 class ResourceToSerializableDocumentMapper(private val relationshipFieldMapper: RelationshipFieldMapper) {
 
@@ -20,7 +21,7 @@ class ResourceToSerializableDocumentMapper(private val relationshipFieldMapper: 
         return createSerializableDocument(resource, included, included)
     }
 
-    fun <T : IzzyResource> createSerializableDocument(
+    private fun <T : IzzyResource> createSerializableDocument(
         resource: T,
         included: MutableList<SerializableDocument>,
         includedValue: List<SerializableDocument>?
@@ -32,7 +33,8 @@ class ResourceToSerializableDocumentMapper(private val relationshipFieldMapper: 
             resource::class.java.getAnnotation(Type::class.java).type,
             getAttributesFor(fields, resource),
             createRelationshipsFor(fields[true] ?: emptyList(), included),
-            includedValue
+            includedValue,
+            resource.tempId
         )
     }
 
@@ -77,17 +79,26 @@ data class SerializableDocument(
     val type: String,
     val attributes: Map<String, Any?>?,
     val relationships: Map<String, Any>?,
-    val included: List<SerializableDocument>?
+    val included: List<SerializableDocument>?,
+    val `temp-id`: String? = null
 ) {
     fun toData() = SerializableDocument(
         id = this.id,
         type = this.type,
         attributes = this.attributes,
         relationships = this.relationships,
-        included = null
+        included = null,
+        `temp-id` = this.`temp-id`,
     )
 
     fun getIncludedList(): List<SerializableDocument>?{
         return if (included.isNullOrEmpty()) null else included
     }
+}
+
+object SidePosting {
+    const val METHOD_UPDATE = "update"
+    const val METHOD_CREATE = "create"
+    const val METHOD_DISASSOCIATE = "disassociate"
+    const val METHOD_DESTROY = "destroy"
 }

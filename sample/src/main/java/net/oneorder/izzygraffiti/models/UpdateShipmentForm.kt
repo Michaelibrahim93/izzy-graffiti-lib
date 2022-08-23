@@ -14,15 +14,18 @@ class UpdateShipmentForm(
     val pallet_size: Double?,
     val pallet_numbers: String?,
     @Relationship("line_item_units")
-    val multipleUnits: List<LineItemUnit>?
+    val multipleUnits: List<LineItemUnit>?,
+    @Relationship("line_item_unit")
+    val favUnit: LineItemUnit?,
 ): IzzyResource(id = id)
 
 @Type("line_item_units")
 class LineItemUnit(
-    id: String?,
-    val weight: Double?,
-    val status_event: String? = null
-): IzzyResource(id = id)
+    id: String? = null,
+    val weight: Double? = null,
+    val status_event: String? = null,
+    method: String? = null
+): IzzyResource(id = id, method = method)
 
 typealias LineItemUnits = List<LineItemUnit>
 
